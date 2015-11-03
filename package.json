@@ -1,0 +1,37 @@
+{
+  "name": "which-polygon",
+  "version": "1.0.0",
+  "description": "Index for matching points against a set of GeoJSON polygons",
+  "main": "index.js",
+  "dependencies": {
+    "geojson-flatten": "^0.1.0",
+    "point-in-region": "^1.0.0",
+    "rbush": "^1.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^1.8.0",
+    "eslint-config-mourner": "^1.0.1"
+  },
+  "scripts": {
+    "test": "eslint *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/which-polygon.git"
+  },
+  "keywords": [
+    "index",
+    "polygon",
+    "geojson",
+    "query"
+  ],
+  "author": "Vladimir Agafonkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mapbox/which-polygon/issues"
+  },
+  "homepage": "https://github.com/mapbox/which-polygon#readme",
+  "eslintConfig": {
+    "extends": "mourner"
+  }
+}

@@ -1,3 +1,5 @@
+'use strict';
+
 var rbush = require('rbush');
 
 exports.index = index;
