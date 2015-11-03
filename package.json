@@ -4,8 +4,6 @@
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
-    "geojson-flatten": "^0.1.0",
-    "point-in-region": "^1.0.0",
     "rbush": "^1.4.1"
   },
   "devDependencies": {
