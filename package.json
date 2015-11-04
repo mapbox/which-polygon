@@ -4,7 +4,8 @@
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
-    "rbush": "^1.4.1"
+    "geojson-rewind": "^0.1.0",
+    "point-in-region": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^1.8.0",
