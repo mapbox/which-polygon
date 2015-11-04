@@ -5,52 +5,30 @@ var rbush = require('rbush');
 module.exports = whichPolygon;
 
 function whichPolygon(data) {
-    var polygons = [];
+    var bboxes = [];
     for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i];
         var coords = feature.geometry.coordinates;
 
         if (feature.geometry.type === 'Polygon') {
-            feature.bbox = ringBBox(coords[0]);
-            polygons.push(feature);
+            bboxes.push(treeItem(coords, feature.properties));
 
         } else if (feature.geometry.type === 'MultiPolygon') {
             for (var j = 0; j < coords.length; j++) {
-                polygons.push({
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: coords[j]
-                    },
-                    properties: feature.properties,
-                    bbox: ringBBox(coords[j][0])
-                });
+                bboxes.push(treeItem(coords[j], feature.properties));
             }
         }
     }
 
-    var tree = rbush().load(polygons.map(treeItem));
+    var tree = rbush().load(bboxes);
 
-    return function (p) {
-        return query(tree, p);
-    };
-}
-
-function query(tree, p) {
-    var result = tree.search([p[0], p[1], p[0], p[1]]);
-    for (var i = 0; i < result.length; i++) {
-        var country = result[i][4];
-        if (insidePolygon(country.geometry.coordinates, p)) {
-            return country.properties;
+    return function query(p) {
+        var result = tree.search([p[0], p[1], p[0], p[1]]);
+        for (var i = 0; i < result.length; i++) {
+            if (insidePolygon(result[i][4], p)) return result[i][5];
         }
-    }
-    return null;
-}
-
-function treeItem(country) {
-    var item = country.bbox.slice();
-    item.push(country);
-    return item;
+        return null;
+    };
 }
 
 // ray casting algorithm for detecting if point is in polygon
@@ -69,14 +47,15 @@ function rayIntersect(p, p1, p2) {
     return ((p1[1] > p[1]) !== (p2[1] > p[1])) && (p[0] < (p2[0] - p1[0]) * (p[1] - p1[1]) / (p2[1] - p1[1]) + p1[0]);
 }
 
-function ringBBox(ring) {
-    var bbox = [Infinity, Infinity, -Infinity, -Infinity];
+function treeItem(coords, props) {
+    var item = [Infinity, Infinity, -Infinity, -Infinity, coords, props];
 
-    for (var i = 0; i < ring.length; i++) {
-        bbox[0] = Math.min(bbox[0], ring[i][0]);
-        bbox[1] = Math.min(bbox[1], ring[i][1]);
-        bbox[2] = Math.max(bbox[2], ring[i][0]);
-        bbox[3] = Math.max(bbox[3], ring[i][1]);
+    for (var i = 0; i < coords[0].length; i++) {
+        var p = coords[0][i];
+        item[0] = Math.min(item[0], p[0]);
+        item[1] = Math.min(item[1], p[1]);
+        item[2] = Math.max(item[2], p[0]);
+        item[3] = Math.max(item[3], p[1]);
     }
-    return bbox;
+    return item;
 }
