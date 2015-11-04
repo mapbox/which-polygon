@@ -2,20 +2,9 @@
 
 var rbush = require('rbush');
 
-exports.index = index;
-exports.query = query;
+module.exports = whichPolygon;
 
-function query(tree, p) {
-    var result = tree.search([p[0], p[1], p[0], p[1]]);
-    for (var i = 0; i < result.length; i++) {
-        var country = result[i][4];
-        if (insidePolygon(country.geometry.coordinates, p)) {
-            return country.properties;
-        }
-    }
-}
-
-function index(data) {
+function whichPolygon(data) {
     var polygons = [];
     for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i];
@@ -40,7 +29,22 @@ function index(data) {
         }
     }
 
-    return rbush().load(polygons.map(treeItem));
+    var tree = rbush().load(polygons.map(treeItem));
+
+    return function (p) {
+        return query(tree, p);
+    };
+}
+
+function query(tree, p) {
+    var result = tree.search([p[0], p[1], p[0], p[1]]);
+    for (var i = 0; i < result.length; i++) {
+        var country = result[i][4];
+        if (insidePolygon(country.geometry.coordinates, p)) {
+            return country.properties;
+        }
+    }
+    return null;
 }
 
 function treeItem(country) {

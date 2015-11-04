@@ -7,10 +7,10 @@ var data = require('./countries.json');
 console.timeEnd('load counties');
 
 console.time('preprocess');
-var tree = whichPolygon.index(data);
+var query = whichPolygon(data);
 console.timeEnd('preprocess');
 
-if (whichPolygon.query(tree, [30.5, 50.5]).admin !== 'Ukraine')
+if (query([30.5, 50.5]).admin !== 'Ukraine')
     throw new Error('Not Ukraine');
 
 var len = 10000;
@@ -24,6 +24,6 @@ for (var i = 0; i < len; i++) {
 
 console.time('query ' + len + ' points');
 for (i = 0; i < points.length; i++) {
-    whichPolygon.query(tree, points[i]);
+    query(points[i]);
 }
 console.timeEnd('query ' + len + ' points');
