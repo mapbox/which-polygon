@@ -13,3 +13,9 @@ test('queries polygons', function (t) {
 	t.equal(query([-50, 30]), null);
 	t.end();
 });
+
+test('returns tree', function (t) {
+  t.ok(query.tree);
+  t.type(query.tree, 'object');
+  t.end();
+});

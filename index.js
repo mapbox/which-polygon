@@ -22,13 +22,15 @@ function whichPolygon(data) {
 
     var tree = rbush().load(bboxes);
 
-    return function query(p) {
+    var query = function (p) {
         var result = tree.search([p[0], p[1], p[0], p[1]]);
         for (var i = 0; i < result.length; i++) {
             if (insidePolygon(result[i][4], p)) return result[i][5];
         }
         return null;
     };
+    query.tree = tree;
+    return query;
 }
 
 // ray casting algorithm for detecting if point is in polygon
