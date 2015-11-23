@@ -1,6 +1,7 @@
 'use strict';
 
 var rbush = require('rbush');
+var lineclip = require('lineclip');
 
 module.exports = whichPolygon;
 
@@ -22,7 +23,7 @@ function whichPolygon(data) {
 
     var tree = rbush().load(bboxes);
 
-    return function query(p) {
+    function query(p) {
         var result = tree.search({
             minX: p[0],
             minY: p[1],
@@ -33,7 +34,31 @@ function whichPolygon(data) {
             if (insidePolygon(result[i].coords, p)) return result[i].props;
         }
         return null;
+    }
+
+    query.tree = tree;
+    query.bbox = function queryBBox(bbox) {
+        var output = [];
+        var result = tree.search({
+            minX: bbox[0],
+            minY: bbox[1],
+            maxX: bbox[2],
+            maxY: bbox[3]
+        });
+        var bboxCenter = [
+            (bbox[0] + bbox[2]) / 2,
+            (bbox[1] + bbox[3]) / 2
+        ];
+        for (var i = 0; i < result.length; i++) {
+            var coords = result[i].coords;
+            if (insidePolygon(coords, bboxCenter) || lineclip(coords[0], bbox).length > 0) {
+                output.push(result[i].props);
+            }
+        }
+        return output;
     };
+
+    return query;
 }
 
 // ray casting algorithm for detecting if point is in polygon
