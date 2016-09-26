@@ -23,9 +23,14 @@ function whichPolygon(data) {
     var tree = rbush().load(bboxes);
 
     return function query(p) {
-        var result = tree.search([p[0], p[1], p[0], p[1]]);
+        var result = tree.search({
+            minX: p[0],
+            minY: p[1],
+            maxX: p[0],
+            maxY: p[1]
+        });
         for (var i = 0; i < result.length; i++) {
-            if (insidePolygon(result[i][4], p)) return result[i][5];
+            if (insidePolygon(result[i].coords, p)) return result[i].props;
         }
         return null;
     };
@@ -48,14 +53,21 @@ function rayIntersect(p, p1, p2) {
 }
 
 function treeItem(coords, props) {
-    var item = [Infinity, Infinity, -Infinity, -Infinity, coords, props];
+    var item = {
+        minX: Infinity,
+        minY: Infinity,
+        maxX: -Infinity,
+        maxY: -Infinity,
+        coords: coords,
+        props: props
+    };
 
     for (var i = 0; i < coords[0].length; i++) {
         var p = coords[0][i];
-        item[0] = Math.min(item[0], p[0]);
-        item[1] = Math.min(item[1], p[1]);
-        item[2] = Math.max(item[2], p[0]);
-        item[3] = Math.max(item[3], p[1]);
+        item.minX = Math.min(item.minX, p[0]);
+        item.minY = Math.min(item.minY, p[1]);
+        item.maxX = Math.max(item.maxX, p[0]);
+        item.maxY = Math.max(item.maxY, p[1]);
     }
     return item;
 }

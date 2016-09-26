@@ -4,12 +4,12 @@
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
-    "rbush": "^1.4.1"
+    "rbush": "^2.0.1"
   },
   "devDependencies": {
-    "eslint": "^1.8.0",
-    "eslint-config-mourner": "^1.0.1",
-    "tap": "^2.2.0"
+    "eslint": "^3.6.0",
+    "eslint-config-mourner": "^2.0.1",
+    "tap": "^7.1.2"
   },
   "scripts": {
     "pretest": "eslint *.js",
