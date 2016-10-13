@@ -1,4 +1,4 @@
-A simple index for matching points against a set of GeoJSON polygons to find what polygon a point belongs to.
+A simple index for matching points and bboxes against a set of GeoJSON polygons to find what polygon it belongs to.
 For example, determining the country of a location given a countries GeoJSON.
 
 [![Build Status](https://travis-ci.org/mapbox/which-polygon.svg?branch=master)](https://travis-ci.org/mapbox/which-polygon)
@@ -17,6 +17,15 @@ query([30.5, 50.5]).admin; // 'Ukraine'
 ```
 
 The input GeoJSON must be a feature collection of polygons or multipolygons.
+The query returns the properties of the matched polygon feature.
 
 Once the index is built, queries are pretty fast —
 17 seconds to query 1 million random locations on a Macbook Pro in this particular case.
+
+You can also query all polygons that intersect a given bbox:
+
+```js
+var query = whichPolygon(geojson);
+var results = query.bbox([30.5, 50.5, 30.51, 50.51]);
+results[0].admin; // 'Ukraine'
+```
