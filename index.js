@@ -45,13 +45,8 @@ function whichPolygon(data) {
             maxX: bbox[2],
             maxY: bbox[3]
         });
-        var bboxCenter = [
-            (bbox[0] + bbox[2]) / 2,
-            (bbox[1] + bbox[3]) / 2
-        ];
         for (var i = 0; i < result.length; i++) {
-            var coords = result[i].coords;
-            if (insidePolygon(coords, bboxCenter) || lineclip(coords[0], bbox).length > 0) {
+            if (polygonIntersectsBBox(result[i].coords, bbox)) {
                 output.push(result[i].props);
             }
         }
@@ -59,6 +54,18 @@ function whichPolygon(data) {
     };
 
     return query;
+}
+
+function polygonIntersectsBBox(polygon, bbox) {
+    var bboxCenter = [
+        (bbox[0] + bbox[2]) / 2,
+        (bbox[1] + bbox[3]) / 2
+    ];
+    if (insidePolygon(polygon, bboxCenter)) return true;
+    for (var i = 0; i < polygon.length; i++) {
+        if (lineclip(polygon[i], bbox).length > 0) return true;
+    }
+    return false;
 }
 
 // ray casting algorithm for detecting if point is in polygon
