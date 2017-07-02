@@ -23,17 +23,23 @@ function whichPolygon(data) {
 
     var tree = rbush().load(bboxes);
 
-    function query(p) {
-        var result = tree.search({
+    function query( p, multi ) {
+        var output = []
+        , result = tree.search({
             minX: p[0],
             minY: p[1],
             maxX: p[0],
             maxY: p[1]
-        });
+        });        
         for (var i = 0; i < result.length; i++) {
-            if (insidePolygon(result[i].coords, p)) return result[i].props;
+            if ( insidePolygon(result[i].coords, p) ) {
+                
+                if( multi ) output.push( result[i].props )
+                else return result[i].props
+                
+            }   
         }
-        return null;
+        return multi && output.length ? output : null;
     }
 
     query.tree = tree;
