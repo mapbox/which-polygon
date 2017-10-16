@@ -19,6 +19,13 @@ query([30.5, 50.5]).admin; // 'Ukraine'
 The input GeoJSON must be a feature collection of polygons or multipolygons.
 The query returns the properties of the matched polygon feature.
 
+By default query returns properties of the first polygon that has been found (object or null).
+To return array of all found polygon propertires use option `multi` as a second parameter
+
+```js
+query([14.3,51.2],true); // [ { props1 }, { props2 }, { props3  } ... ] || null
+```
+
 Once the index is built, queries are pretty fast —
 17 seconds to query 1 million random locations on a Macbook Pro in this particular case.
 
