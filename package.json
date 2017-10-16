@@ -1,6 +1,6 @@
 {
   "name": "which-polygon",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
