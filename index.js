@@ -12,11 +12,11 @@ function whichPolygon(data) {
         var coords = feature.geometry.coordinates;
 
         if (feature.geometry.type === 'Polygon') {
-            bboxes.push(treeItem(coords, feature.properties));
+            bboxes.push(treeItem(coords, feature.properties, feature.id));
 
         } else if (feature.geometry.type === 'MultiPolygon') {
             for (var j = 0; j < coords.length; j++) {
-                bboxes.push(treeItem(coords[j], feature.properties));
+                bboxes.push(treeItem(coords[j], feature.properties, feature.id));
             }
         }
     }
@@ -90,7 +90,7 @@ function rayIntersect(p, p1, p2) {
     return ((p1[1] > p[1]) !== (p2[1] > p[1])) && (p[0] < (p2[0] - p1[0]) * (p[1] - p1[1]) / (p2[1] - p1[1]) + p1[0]);
 }
 
-function treeItem(coords, props) {
+function treeItem(coords, props, id) {
     var item = {
         minX: Infinity,
         minY: Infinity,
@@ -99,6 +99,10 @@ function treeItem(coords, props) {
         coords: coords,
         props: props
     };
+
+    if (id !== undefined) {
+        item.id = id;
+    }
 
     for (var i = 0; i < coords[0].length; i++) {
         var p = coords[0][i];
