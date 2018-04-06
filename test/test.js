@@ -34,3 +34,11 @@ test('queries overlapping polygons with a point', function (t) {
     t.equal(queryOverlapping([-10, -10]), null);
     t.end();
 });
+
+test('queries features with id', function (t) {
+    var colorado = require('./fixtures/colorado.json');
+    var query = whichPolygon(colorado);
+
+    t.equal(query([-105, 39]).id, "colorado", "query feature with id");
+    t.end();
+});
