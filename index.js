@@ -34,9 +34,9 @@ function whichPolygon(data) {
         for (var i = 0; i < result.length; i++) {
             if (insidePolygon(result[i].coords, p)) {
                 if (multi)
-                    output.push(result[i].props);
+                    output.push(result[i]);
                 else
-                    return result[i].props;
+                    return result[i];
             }
         }
         return multi && output.length ? output : null;
@@ -53,7 +53,7 @@ function whichPolygon(data) {
         });
         for (var i = 0; i < result.length; i++) {
             if (polygonIntersectsBBox(result[i].coords, bbox)) {
-                output.push(result[i].props);
+                output.push(result[i]);
             }
         }
         return output;
@@ -97,7 +97,7 @@ function treeItem(coords, props, id) {
         maxX: -Infinity,
         maxY: -Infinity,
         coords: coords,
-        props: props
+        properties: props
     };
 
     if (id !== undefined) {
