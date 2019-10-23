@@ -10,7 +10,7 @@ console.time('preprocess');
 var query = whichPolygon(data);
 console.timeEnd('preprocess');
 
-if (query([30.5, 50.5]).admin !== 'Ukraine')
+if (query([30.5, 50.5]).ADMIN !== 'Ukraine')
     throw new Error('Not Ukraine');
 
 var len = 10000;
