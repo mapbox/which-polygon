@@ -27,3 +27,8 @@ for (i = 0; i < points.length; i++) {
     query(points[i]);
 }
 console.timeEnd('query ' + len + ' points');
+
+const indexData = query.data;
+console.time('preprocess (from saved index data)');
+whichPolygon(data, indexData);
+console.timeEnd('preprocess (from saved index data)');

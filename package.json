@@ -1,10 +1,10 @@
 {
   "name": "which-polygon",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
-    "rbush": "^2.0.1",
+    "flatbush": "^3.1.1",
     "lineclip": "^1.1.5"
   },
   "devDependencies": {

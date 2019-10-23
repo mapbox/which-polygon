@@ -1,11 +1,11 @@
 'use strict';
 
-var rbush = require('rbush');
 var lineclip = require('lineclip');
+var Flatbush = require('flatbush');
 
 module.exports = whichPolygon;
 
-function whichPolygon(data) {
+function whichPolygon(data, indexData) {
     var bboxes = [];
     for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i];
@@ -21,16 +21,25 @@ function whichPolygon(data) {
         }
     }
 
-    var tree = rbush().load(bboxes);
+    var index;
+    if (indexData) {
+        index = Flatbush.from(indexData);
+    } else {
+        index = new Flatbush(bboxes.length);
+        for (var k = 0; k < bboxes.length; k++) {
+            index.add(bboxes[k].minX, bboxes[k].minY, bboxes[k].maxX, bboxes[k].maxY);
+        }
+        index.finish();
+    }
 
     function query(p, multi) {
         var output = [],
-            result = tree.search({
-                minX: p[0],
-                minY: p[1],
-                maxX: p[0],
-                maxY: p[1]
-            });
+            result = index.search(
+                p[0],
+                p[1],
+                p[0],
+                p[1]
+            ).map(function (i) { return bboxes[i]; });
         for (var i = 0; i < result.length; i++) {
             if (insidePolygon(result[i].coords, p)) {
                 if (multi)
@@ -42,15 +51,17 @@ function whichPolygon(data) {
         return multi && output.length ? output : null;
     }
 
-    query.tree = tree;
+    // CB: this isn't documented as a public api but may be a problem for some?
+    // query.tree = tree;
+    query.data = index.data;
     query.bbox = function queryBBox(bbox) {
         var output = [];
-        var result = tree.search({
-            minX: bbox[0],
-            minY: bbox[1],
-            maxX: bbox[2],
-            maxY: bbox[3]
-        });
+        var result = index.search(
+            bbox[0],
+            bbox[1],
+            bbox[2],
+            bbox[3]
+        ).map(function (i) { return bboxes[i]; });
         for (var i = 0; i < result.length; i++) {
             if (polygonIntersectsBBox(result[i].coords, bbox)) {
                 output.push(result[i].props);
