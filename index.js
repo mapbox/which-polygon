@@ -9,6 +9,10 @@ function whichPolygon(data) {
     var bboxes = [];
     for (var i = 0; i < data.features.length; i++) {
         var feature = data.features[i];
+
+        // unlocated GeoJSON features can have null `geometry`
+        if (!feature.geometry) continue;
+
         var coords = feature.geometry.coordinates;
 
         if (feature.geometry.type === 'Polygon') {
