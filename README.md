@@ -7,7 +7,6 @@ For example, determining the country of a location given a countries GeoJSON.
 
 ### Example usage
 
-Using [this 50m world countries dataset](https://s3.amazonaws.com/geojson-please/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson):
 
 ```js
 var geojson = require('./countries.json');
