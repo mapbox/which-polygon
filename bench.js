@@ -10,7 +10,7 @@ console.time('preprocess');
 var query = whichPolygon(data);
 console.timeEnd('preprocess');
 
-if (query([30.5, 50.5]).admin !== 'Ukraine')
+if (query([30.5, 50.5]).ADMIN !== 'Ukraine')
     throw new Error('Not Ukraine');
 
 var len = 10000;
@@ -27,3 +27,8 @@ for (i = 0; i < points.length; i++) {
     query(points[i]);
 }
 console.timeEnd('query ' + len + ' points');
+
+const indexData = query.data;
+console.time('preprocess (from saved index data)');
+whichPolygon(data, indexData);
+console.timeEnd('preprocess (from saved index data)');

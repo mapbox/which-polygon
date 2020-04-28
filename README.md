@@ -35,3 +35,12 @@ var query = whichPolygon(geojson);
 var results = query.bbox([30.5, 50.5, 30.51, 50.51]);
 results[0].admin; // 'Ukraine'
 ```
+
+It's possible to save index data for later use to avoid the cost of creating the spatial index again. Internally the Flatbush index [stores this data as an ArrayBuffer](https://github.com/mourner/flatbush#flatbushfromdata).
+
+```js
+var query = whichPolygon(geojson);
+var indexData = query.data;
+// save to disk perhaps...
+var newQuery = whichPolygon(geojson, indexData);
+```
