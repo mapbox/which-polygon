@@ -16,11 +16,11 @@ function whichPolygon(data) {
         var coords = feature.geometry.coordinates;
 
         if (feature.geometry.type === 'Polygon') {
-            bboxes.push(treeItem(coords, feature.properties));
+            bboxes.push(treeItem(coords, feature.properties, feature.id));
 
         } else if (feature.geometry.type === 'MultiPolygon') {
             for (var j = 0; j < coords.length; j++) {
-                bboxes.push(treeItem(coords[j], feature.properties));
+                bboxes.push(treeItem(coords[j], feature.properties, feature.id));
             }
         }
     }
@@ -38,9 +38,9 @@ function whichPolygon(data) {
         for (var i = 0; i < result.length; i++) {
             if (insidePolygon(result[i].coords, p)) {
                 if (multi)
-                    output.push(result[i].props);
+                    output.push(result[i]);
                 else
-                    return result[i].props;
+                    return result[i];
             }
         }
         return multi && output.length ? output : null;
@@ -57,7 +57,7 @@ function whichPolygon(data) {
         });
         for (var i = 0; i < result.length; i++) {
             if (polygonIntersectsBBox(result[i].coords, bbox)) {
-                output.push(result[i].props);
+                output.push(result[i]);
             }
         }
         return output;
@@ -94,15 +94,19 @@ function rayIntersect(p, p1, p2) {
     return ((p1[1] > p[1]) !== (p2[1] > p[1])) && (p[0] < (p2[0] - p1[0]) * (p[1] - p1[1]) / (p2[1] - p1[1]) + p1[0]);
 }
 
-function treeItem(coords, props) {
+function treeItem(coords, props, id) {
     var item = {
         minX: Infinity,
         minY: Infinity,
         maxX: -Infinity,
         maxY: -Infinity,
         coords: coords,
-        props: props
+        properties: props
     };
+
+    if (id !== undefined) {
+        item.id = id;
+    }
 
     for (var i = 0; i < coords[0].length; i++) {
         var p = coords[0][i];
