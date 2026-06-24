@@ -1,6 +1,6 @@
 {
   "name": "which-polygon",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Index for matching points against a set of GeoJSON polygons",
   "main": "index.js",
   "dependencies": {
@@ -34,5 +34,8 @@
   "homepage": "https://github.com/mapbox/which-polygon#readme",
   "eslintConfig": {
     "extends": "mourner"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
